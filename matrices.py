@@ -11,6 +11,7 @@
 """
 
 from numpy import matlib
+import sys
 
 
 def multiplication(a, b):
@@ -36,6 +37,33 @@ def multiplication(a, b):
                 c[i,j] = total
         return c
 
+#nbMatrices: le nombre de matrices à multiplier
+#dimensions: les dimensions des matrices
+#out: le nombre de multiplications et la matrice frontieres
+def parenthesage_naif(nbMatrices, dimensions):
+    """Calcule récursivement le meilleure parenthésage pour une
+       série de multiplications de matrices. Il effectue le calcul
+       de façon récursive"""
+    
+    f = matlib.zeros()
+    nbMult, frontieres = trouverParenthesageRecursif(0, nbMatrices, dimensions, f)
+    return nbMult, frontieres
+
+
+def trouverParenthesageRecursif(i, j, dim, frontiere):
+    """Appel récursif pour trouver le meilleur parenthésage"""
+    minimum = 0
+    if i != j:
+        minimum = sys.maxint
+        for k in range(i, j):
+            gauche, frontiere = trouverParenthesageRecursif(i, k,dim, frontiere)
+            droite, frontiere = trouverParenthesageRecursif(k+1, j, dim, frontiere)
+            total = gauche + droite + dim[i-1]*dim[k]*dim[j]
+            if total < minimum:
+                minimum = total
+                frontiereTemp = k
+        frontiere[i,j] = frontiereTemp
+    return minimum, frontiere
 
 def main():
     a = matlib.ones((2, 3))
@@ -47,6 +75,10 @@ def main():
 
     print(c)
 
+
+
+    #On test le premier parenthesage
+    
 
 if __name__ == "__main__":
     main()
