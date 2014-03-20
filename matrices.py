@@ -175,7 +175,13 @@ def multiplierChaineMatrice(frontieres, matrices, i, j):
     else:
         return matrices[i]
 
+def lireFichierMatrice():
+    with open("matrices.txt", "r") as matrice:
+        #Première ligne: nombre de matrices
+        nombreMat = int(matrice.readline())
 
+    return nombreMat
+        
 
 def main():
     a = matlib.ones((2, 3))
@@ -221,6 +227,7 @@ def main():
     #print "resultat = " + str(resultat)
     #print dynamique.frontieres
     #print dynamique.m
+    print lireFichierMatrice()
 
 
 
