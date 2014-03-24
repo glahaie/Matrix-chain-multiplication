@@ -166,12 +166,28 @@ def multiplierChaineMatrice(frontieres, matrices, i, j):
 # Lecture du fichier et initialisation des matrices
 ###############################################################################
 def lireFichierMatrice(fichier):
-    with open(fichier, "r") as matrices:
-        noMatrice = int(matrices.readline())
-        dimensions = map(int, matrices.readline().strip().split(" "))
-        print noMatrice
-        print dimensions
+    with open(fichier, "r") as fichier:
+        noMatrice = int(fichier.readline())
+        dimensions = map(int, fichier.readline().strip().split(" "))
 
+        matrices = []
+        for i in range(0, len(dimensions)-1):
+                matrice = []    
+                # On remplit la matrice
+                for j in range(0, dimensions[i]):
+                    temp = map(int, 
+                            filter(lambda x: x != "", 
+                                map(lambda x: x.strip(),
+                                    fichier.readline().strip().split(" ")
+                                    )
+                                )
+                            )
+                    if len(temp) != dimensions[i+1]:
+                        print "Erreur dans le fichier source"
+                        sys.exit(1)
+                    matrice.append(temp)
+                matrices.append(matlib.matrix(matrice))
+    return dimensions, matrices
 
 def main():
     if len(sys.argv) != 2:
@@ -218,7 +234,19 @@ def main():
     #print "resultat = " + str(resultat)
     #print dynamique.frontieres
     #print dynamique.m
-    lireFichierMatrice(sys.argv[1])
+    dimensions, matrices = lireFichierMatrice(sys.argv[1])
+    frontieres1 = matlib.zeros((len(dimensions), len(dimensions)), dtype=int)
+    resultat1 = trouverParenthesageOptimalNaif(frontieres1, dimensions, 1, len(dimensions)-1)
+    frontieres2 = matlib.zeros((len(dimensions), len(dimensions)), dtype=int)
+    resultat2 = trouverParenthesageOptimalNaif(frontieres2, dimensions, 1, len(dimensions)-1)
+    frontieres3 = matlib.zeros((len(dimensions), len(dimensions)), dtype=int)
+    resultat3 = trouverParenthesageOptimalNaif(frontieres3, dimensions, 1, len(dimensions)-1)
+
+    print "resultat1 = " + str(resultat1) + " 2 = " + str(resultat2) + " 3 = " + str(resultat3)
+    print frontieres1
+    print frontieres2
+    print frontieres3
+
 
 
 
