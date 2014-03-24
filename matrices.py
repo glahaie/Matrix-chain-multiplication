@@ -162,8 +162,22 @@ def multiplierChaineMatrice(frontieres, matrices, i, j):
     else:
         return matrices[i]
 
+###############################################################################
+# Lecture du fichier et initialisation des matrices
+###############################################################################
+def lireFichierMatrice(fichier):
+    with open(fichier, "r") as matrices:
+        noMatrice = int(matrices.readline())
+        dimensions = map(int, matrices.readline().strip().split(" "))
+        print noMatrice
+        print dimensions
+
 
 def main():
+    if len(sys.argv) != 2:
+        print "Utilisation: matrice.py <nom_fichier>"
+        sys.exit(1)
+
     dimensions = [13, 5, 89, 3, 34]
 
     matrices = [matlib.zeros((1, 1),dtype=int)]
@@ -172,7 +186,6 @@ def main():
 
         for j in range(0, min(dimensions[i], dimensions[i+1])):
                 matrice[j,j] = 1
-        print matrice
         matrices.append(matrice)
  
 #    #Algo naif, #1
@@ -205,7 +218,7 @@ def main():
     #print "resultat = " + str(resultat)
     #print dynamique.frontieres
     #print dynamique.m
-    #print lireFichierMatrice()
+    lireFichierMatrice(sys.argv[1])
 
 
 
