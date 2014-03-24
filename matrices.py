@@ -14,6 +14,10 @@ from numpy import matlib
 import sys
 
 
+###############################################################################
+# Multiplication de deux matrices
+###############################################################################
+
 def multiplierMatrice(a, b):
     """Multiplie les matrices a et b, et retourne
        le résultat dans une nouvelle matrice"""
@@ -33,141 +37,124 @@ def multiplierMatrice(a, b):
     return c
 
 
-class ParNaif:
-    """Algorithme de parenthésage naif, diviser pour régner,
-       sans stockage des résultats déjà calculés"""
+###############################################################################
+# Algorithme 1: Approche diviser pour régner sans stockage de résultat
+###############################################################################
+def trouverParenthesageOptimalNaif(frontiere, dim, i, j):
+    """Calcule récursivement le meilleure parenthésage pour une
+       série de multiplications de matrices. Il effectue le calcul
+       de façon récursive
+       frontiere: matrice de position des parenthèses pour deux matrices
+       dim: tableau de dimensions des matrices à multiplier
+    """
+    minimum = 0
+    if i != j:
+        minimum = sys.maxint    #minimum = infini
+        for k in range(i, j):
+            gauche = trouverParenthesageOptimalNaif(frontiere, dim, i, k)
+            droite = trouverParenthesageOptimalNaif(frontiere, dim, k+1, j)
+            total = gauche + droite + dim[i-1]*dim[k]*dim[j]
+            if total < minimum:
+                frontiereTemp = k
+                minimum = total
+        frontiere[i, j] = frontiereTemp
+    return minimum
 
-    def __init__(self, dimensions):
-        self.dim = dimensions
-        #La matrice est trop grande pour le moment, pour faciliter l'accès
-        self.frontieres = matlib.zeros((len(self.dim), len(self.dim)), dtype=int)
+###############################################################################
+# Algorithme 2: Approche diviser pour régner avec stockage de résultat
+###############################################################################
+def trouverParenthesageOptimalAvecStockage(frontiere, dim):
+    """Calcule récursivement le meilleure parenthésage pour une
+       série de multiplications de matrices. Il effectue le calcul
+       de façon récursive
+       frontiere: matrice de position des parentheses pour deux matrices
+       dim: tableau de dimensions des matrices à multiplier
+       m: résultats déjà calculés
+    """
+    m = matlib.empty((len(dim), len(dim)), dtype=int)
+    m.fill(-1)
+    return __trouverParenthesageOptimalAvecStockage(frontiere, dim, m, 1, len(dim)-1)
 
-    def trouverParenthesageOptimal(self):
-        return self.__trouverParenthesageOptimal(1, len(self.dim)-1)
+def __trouverParenthesageOptimalAvecStockage(frontiere, dim, m, i, j):
+    minimum = 0
+    if i != j:
+        minimum = sys.maxint    #minimum = infini
+        for k in range(i, j):
+            if(m[i,k] < 0):
+                m[i, k] = __trouverParenthesageOptimalAvecStockage(frontiere, dim, m, i, k)
+            if(m[k+1,j] < 0):
+                m[k+1,j] = __trouverParenthesageOptimalAvecStockage(frontiere, dim, m, k+1, j)
+            total = m[i,k] + m[k+1,j] + dim[i-1]*dim[k]*dim[j]
+            if total < minimum:
+                frontiereTemp = k
+                minimum = total
+        frontiere[i, j] = frontiereTemp
+    return minimum
 
-    def __trouverParenthesageOptimal(self, i, j):
-        """Calcule récursivement le meilleure parenthésage pour une
-           série de multiplications de matrices. Il effectue le calcul
-           de façon récursive
-        """
-        minimum = 0
-        if i != j:
-            minimum = sys.maxint    #minimum = infini
+###############################################################################
+# Algorithme 3: Programmation dynamique
+###############################################################################
+def trouverParenthesageOptimalDynamique(frontiere, dim):
+    """On remplit la matrice m des résultats partiels"""
+    m = matlib.zeros((len(dim), len(dim)), dtype=int)
+    n = len(dim)
+    for i in range(1, n):
+        m[i,i] = 0
+    for l in range(2, n):
+        for i in range(1, n-l+1):
+            j = i + l -1
+            m[i,j] = sys.maxint
             for k in range(i, j):
-                gauche = self.__trouverParenthesageOptimal(i, k)
-                droite = self.__trouverParenthesageOptimal(k+1, j)
-                total = gauche + droite + self.dim[i-1]*self.dim[k]*self.dim[j]
-                if total < minimum:
-                    frontiereTemp = k
-                    minimum = total
-            self.frontieres[i, j] = frontiereTemp
-        return minimum
+                q = m[i,k] + m[k+1, j] + dim[i-1]*dim[k]*dim[j]
+                if q < m[i,j]:
+                    m[i,j] = q
+                    frontiere[i,j] = k
+    return m[1, len(dim) -1]
+
+
+###############################################################################
+# Affiche le parenthésage optimal des matrices
+###############################################################################
+def afficherParenthesageOptimal(frontieres):
+    """Affiche le parenthésage optimal pour un chaine de matrices selon
+       les résultats compris dans la matrice frontieres
+    """
+    info = {}
+    for i in range(1, frontieres.shape[0]):
+        nom = "A" + str(i)
+        parAvant = 0
+        parApres = 0
+        info[i] = {"nom":nom, "avant":parAvant, "apres":parApres}
     
-    #Afficher le parenthésage optimal de la matrice frontières
-    def afficherParenthesageOptimal(self):
-        self.info = {}
-        debut = ord('A')
-        for i in range(0, len(self.dim)-1):
-            nom = chr(debut+i)
-            parAvant = 0
-            parApres = 0
-            self.info[i+1] = {"nom":nom, "avant":parAvant, "apres":parApres}
-        
-        self.__calculerParentheses(1, len(self.dim)-1)
+    calculerParentheses(frontieres, info, 1, frontieres.shape[0]-1)
 
-        #On affiche
-        for i in range(1, len(self.dim)):
-            for j in range(0, self.info[i]["avant"]):
-                sys.stdout.write("(")
-            sys.stdout.write(self.info[i]["nom"])
-            for j in range(0, self.info[i]["apres"]):
-                sys.stdout.write(")")
-        sys.stdout.write("\n")
+    #On affiche
+    for i in range(1, frontieres.shape[1]):
+        sys.stdout.write( "("*info[i]["avant"] + info[i]["nom"] + ")"*info[i]["apres"])
+    print
 
 
-    def __calculerParentheses(self, i, j):
-        #On regarde les parenthèse pour le moment
-        if i != j:
-            k = self.frontieres[i,j]
-            if i != k:
-                self.info[i]["avant"] += 1
-                self.info[k]["apres"] += 1
-                self.__calculerParentheses(i, k)
-            if k+1 != j:
-                self.info[k+1]["avant"] += 1
-                self.info[j]["apres"] += 1
-                self.__calculerParentheses(k+1,j)
+def calculerParentheses(frontieres, info, i, j):
+    #On regarde les parenthèse pour le moment
+    if i != j:
+        k = frontieres[i,j]
+        if i != k:
+            info[i]["avant"] += 1
+            info[k]["apres"] += 1
+            calculerParentheses(frontieres, info, i, k)
+        if k+1 != j:
+            info[k+1]["avant"] += 1
+            info[j]["apres"] += 1
+            calculerParentheses(frontieres, info, k+1,j)
 
-
-
-
-
-class ParNaifAvecMemoire:
-    """Algorithme de parenthésage naif, diviser pour régner,
-       On stocke les résultats intermédiaires, et on les calcules seulement si nécessaire"""
-
-    def __init__(self, dimensions):
-        self.dim = dimensions
-        #La matrice est trop grande pour le moment, pour faciliter l'accès
-        self.frontieres = matlib.zeros((len(self.dim), len(self.dim)), dtype=int)
-        self.m = matlib.empty((len(self.dim), len(self.dim)), dtype=int)
-        self.m.fill(-1)
-
-    def trouverParenthesageOptimal(self):
-        self.m[1,len(self.dim)-1] = self.__trouverParenthesageOptimal(1, len(self.dim)-1)
-        return self.m[1, len(self.dim)-1]
-
-    def __trouverParenthesageOptimal(self, i, j):
-        """Calcule récursivement le meilleure parenthésage pour une
-           série de multiplications de matrices. Il effectue le calcul
-           de façon récursive
-        """
-        minimum = 0
-        if i != j:
-            minimum = sys.maxint    #minimum = infini
-            for k in range(i, j):
-                if(self.m[i,k] < 0):
-                    self.m[i, k] =self.__trouverParenthesageOptimal(i, k)
-                if(self.m[k+1,j] < 0):
-                    self.m[k+1,j] = self.__trouverParenthesageOptimal(k+1, j)
-                total = self.m[i,k] + self.m[k+1,j] + self.dim[i-1]*self.dim[k]*self.dim[j]
-                if total < minimum:
-                    frontiereTemp = k
-                    minimum = total
-            self.frontieres[i, j] = frontiereTemp
-        return minimum
-
-
-class AlgoDynamique:
-    """Implémentation de l'algorithme en programmation dynamique pour
-       le parenthésage"""
-    def __init__(self, dimensions):
-        self.dim = dimensions
-        self.frontieres = matlib.zeros((len(self.dim), len(self.dim)), dtype=int)
-        self.m = matlib.zeros((len(self.dim), len(self.dim)), dtype=int)
-
-    def trouverParenthesageOptimal(self):
-        self.calculerM()
-        return self.m[1,len(self.dim)-1]
-
-    def calculerM(self):
-        """On remplit la matrice m des résultats partiels"""
-        n = len(self.dim)
-        for i in range(1, n):
-            self.m[i,i] = 0
-        for l in range(2, n):
-            for i in range(1, n-l+1):
-                j = i + l -1
-                self.m[i,j] = sys.maxint
-                for k in range(i, j):
-                    q = self.m[i,k] + self.m[k+1, j] + self.dim[i-1]*self.dim[k]*self.dim[j]
-                    if q < self.m[i,j]:
-                        self.m[i,j] = q
-                        self.frontieres[i,j] = k
-
-#Multiplie les matrices de la liste matrices, de façon optimal, à l'aide
-#du résultat de frontières
+###############################################################################
+# Multiplication en chaine de matrices de facon optimal selon frontiere
+###############################################################################
 def multiplierChaineMatrice(frontieres, matrices, i, j):
+    """
+        Multiplication des matrices de la liste matrices de façon optimale,
+        à partir des informations de la matrice frontieres
+    """
     if i < j:
         c = multiplierChaineMatrice(frontieres, matrices, i, frontieres[i,j])
         d = multiplierChaineMatrice(frontieres, matrices, frontieres[i,j]+1, j)
@@ -175,24 +162,8 @@ def multiplierChaineMatrice(frontieres, matrices, i, j):
     else:
         return matrices[i]
 
-def lireFichierMatrice():
-    with open("matrices.txt", "r") as matrice:
-        #Première ligne: nombre de matrices
-        nombreMat = int(matrice.readline())
-
-    return nombreMat
-        
 
 def main():
-    a = matlib.ones((2, 3))
-    b = matlib.ones((3, 2))
-    print(a)
-    print(b)
-    
-    c = multiplierMatrice(a, b)
-
-    print(c)
-
     dimensions = [13, 5, 89, 3, 34]
 
     matrices = [matlib.zeros((1, 1),dtype=int)]
@@ -204,30 +175,37 @@ def main():
         print matrice
         matrices.append(matrice)
  
-    #Algo naif, #1
-    naif = ParNaif(dimensions)
-    resultat = naif.trouverParenthesageOptimal()
-
-    print "resultat = " + str(resultat)
-    print naif.frontieres
-    naif.afficherParenthesageOptimal()
-
-#    #Algo naif, #2: avec mémoire
-    #memoire = ParNaifAvecMemoire(dimensions)
-    #resultat = memoire.trouverParenthesageOptimal()
+#    #Algo naif, #1
+    #frontieres = matlib.zeros((len(dimensions), len(dimensions)), dtype=int)
+    #resultat = trouverParenthesageOptimalNaif(frontieres, dimensions,1, len(dimensions)-1)
 
     #print "resultat = " + str(resultat)
-    #print memoire.frontieres
-    #print memoire.m
+    #print frontieres
+    #afficherParenthesageOptimal(frontieres)
 
-    ##Algo 3: prog dynamique
+#    #algo #2, avec stockage de mémoire
+    #frontieres = matlib.zeros((len(dimensions), len(dimensions)), dtype=int)
+    #resultat = trouverParenthesageOptimalAvecStockage(frontieres, dimensions)
+
+    #print "resultat = " + str(resultat)
+    #print frontieres
+    #afficherParenthesageOptimal(frontieres)
+
+    #algo #3, programmation dynamique
+    frontieres = matlib.zeros((len(dimensions), len(dimensions)), dtype=int)
+    resultat = trouverParenthesageOptimalDynamique(frontieres, dimensions)
+
+    print "resultat = " + str(resultat)
+    print frontieres
+    afficherParenthesageOptimal(frontieres)
+
     #dynamique = AlgoDynamique(dimensions)
     #resultat = dynamique.trouverParenthesageOptimal()
 
     #print "resultat = " + str(resultat)
     #print dynamique.frontieres
     #print dynamique.m
-    print lireFichierMatrice()
+    #print lireFichierMatrice()
 
 
 
