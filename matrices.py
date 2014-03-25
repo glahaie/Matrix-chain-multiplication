@@ -12,6 +12,7 @@
 
 from numpy import matlib
 import sys
+from time import time
 
 
 ###############################################################################
@@ -36,11 +37,10 @@ def multiplierMatrice(a, b):
             c[i,j] = total
     return c
 
-
 ###############################################################################
 # Algorithme 1: Approche diviser pour régner sans stockage de résultat
 ###############################################################################
-def trouverParenthesageOptimalNaif(frontiere, dim, i, j):
+def trouverParenthesageOptimalNaif(dim, frontiere, i, j):
     """Calcule récursivement le meilleure parenthésage pour une
        série de multiplications de matrices. Il effectue le calcul
        de façon récursive
@@ -51,8 +51,8 @@ def trouverParenthesageOptimalNaif(frontiere, dim, i, j):
     if i != j:
         minimum = sys.maxint    #minimum = infini
         for k in range(i, j):
-            gauche = trouverParenthesageOptimalNaif(frontiere, dim, i, k)
-            droite = trouverParenthesageOptimalNaif(frontiere, dim, k+1, j)
+            gauche = trouverParenthesageOptimalNaif(dim, frontiere, i, k)
+            droite = trouverParenthesageOptimalNaif(dim, frontiere, k+1, j)
             total = gauche + droite + dim[i-1]*dim[k]*dim[j]
             if total < minimum:
                 frontiereTemp = k
@@ -63,7 +63,7 @@ def trouverParenthesageOptimalNaif(frontiere, dim, i, j):
 ###############################################################################
 # Algorithme 2: Approche diviser pour régner avec stockage de résultat
 ###############################################################################
-def trouverParenthesageOptimalAvecStockage(frontiere, dim):
+def trouverParenthesageOptimalAvecStockage(dim, frontiere, i, j):
     """Calcule récursivement le meilleure parenthésage pour une
        série de multiplications de matrices. Il effectue le calcul
        de façon récursive
@@ -73,7 +73,7 @@ def trouverParenthesageOptimalAvecStockage(frontiere, dim):
     """
     m = matlib.empty((len(dim), len(dim)), dtype=int)
     m.fill(-1)
-    return __trouverParenthesageOptimalAvecStockage(frontiere, dim, m, 1, len(dim)-1)
+    return __trouverParenthesageOptimalAvecStockage(frontiere, dim, m, i, j)
 
 def __trouverParenthesageOptimalAvecStockage(frontiere, dim, m, i, j):
     minimum = 0
@@ -94,14 +94,13 @@ def __trouverParenthesageOptimalAvecStockage(frontiere, dim, m, i, j):
 ###############################################################################
 # Algorithme 3: Programmation dynamique
 ###############################################################################
-def trouverParenthesageOptimalDynamique(frontiere, dim):
+def trouverParenthesageOptimalDynamique(n, dim, frontiere):
     """On remplit la matrice m des résultats partiels"""
-    m = matlib.zeros((len(dim), len(dim)), dtype=int)
-    n = len(dim)
-    for i in range(1, n):
+    m = matlib.zeros((n+1, n+1), dtype=int)
+    for i in range(1, n+1):
         m[i,i] = 0
-    for l in range(2, n):
-        for i in range(1, n-l+1):
+    for l in range(2, n+1):
+        for i in range(1, n-l+2):
             j = i + l -1
             m[i,j] = sys.maxint
             for k in range(i, j):
@@ -109,29 +108,28 @@ def trouverParenthesageOptimalDynamique(frontiere, dim):
                 if q < m[i,j]:
                     m[i,j] = q
                     frontiere[i,j] = k
-    return m[1, len(dim) -1]
+    return m[1, n]
 
 
 ###############################################################################
 # Affiche le parenthésage optimal des matrices
 ###############################################################################
-def afficherParenthesageOptimal(frontieres):
-    """Affiche le parenthésage optimal pour un chaine de matrices selon
-       les résultats compris dans la matrice frontieres
-    """
-    info = {}
-    for i in range(1, frontieres.shape[0]):
-        nom = "A" + str(i)
-        parAvant = 0
-        parApres = 0
-        info[i] = {"nom":nom, "avant":parAvant, "apres":parApres}
-    
-    calculerParentheses(frontieres, info, 1, frontieres.shape[0]-1)
-
-    #On affiche
-    for i in range(1, frontieres.shape[1]):
-        sys.stdout.write( "("*info[i]["avant"] + info[i]["nom"] + ")"*info[i]["apres"])
+def afficherParenthesageOptimal(frontieres, i, j):
+    __afficherParenthesageOptimal(frontieres, i, j)
     print
+
+def __afficherParenthesageOptimal(frontieres, i, j):
+    """Affiche le parenthésage optimal pour un chaine de matrices selon
+    les résultats compris dans la matrice frontieres. Source: Introduction
+    to Algorithms, 3rd edition
+    """
+    if i == j:
+        sys.stdout.write("A"+str(i))
+    else:
+        sys.stdout.write("(")
+        __afficherParenthesageOptimal(frontieres, i, frontieres[i, j])
+        __afficherParenthesageOptimal(frontieres, frontieres[i, j]+1, j)
+        sys.stdout.write(")")
 
 
 def calculerParentheses(frontieres, info, i, j):
@@ -168,15 +166,20 @@ def multiplierChaineMatrice(frontieres, matrices, i, j):
 def lireFichierMatrice(fichier):
     with open(fichier, "r") as fichier:
         noMatrice = int(fichier.readline())
-        dimensions = map(int, fichier.readline().strip().split(" "))
+        dimensions = map(int,
+                         filter(lambda x: x != "",
+                                map(lambda x: x.strip(),
+                                    fichier.readline().strip().split(" "))))
 
-        matrices = []
+        assert (len(dimensions) == noMatrice+1),"Erreur de dimensions dans le fichier"
+
+        matrices = [None]
         for i in range(0, len(dimensions)-1):
-                matrice = []    
+                matrice = []
                 # On remplit la matrice
                 for j in range(0, dimensions[i]):
-                    temp = map(int, 
-                            filter(lambda x: x != "", 
+                    temp = map(int,
+                            filter(lambda x: x != "",
                                 map(lambda x: x.strip(),
                                     fichier.readline().strip().split(" ")
                                     )
@@ -187,66 +190,41 @@ def lireFichierMatrice(fichier):
                         sys.exit(1)
                     matrice.append(temp)
                 matrices.append(matlib.matrix(matrice))
-    return dimensions, matrices
+    return noMatrice, dimensions, matrices
 
 def main():
     if len(sys.argv) != 2:
         print "Utilisation: matrice.py <nom_fichier>"
         sys.exit(1)
 
-    dimensions = [13, 5, 89, 3, 34]
+    #On lit le fichier
+    n, dimensions, matrices = lireFichierMatrice(sys.argv[1])
 
-    matrices = [matlib.zeros((1, 1),dtype=int)]
-    for i in range(0, len(dimensions)-1):
-        matrice = matlib.zeros((dimensions[i], dimensions[i+1]), dtype=int)
+    print "Temps des algorithmes pour le fichier " + sys.argv[1]
 
-        for j in range(0, min(dimensions[i], dimensions[i+1])):
-                matrice[j,j] = 1
-        matrices.append(matrice)
- 
-#    #Algo naif, #1
-    #frontieres = matlib.zeros((len(dimensions), len(dimensions)), dtype=int)
-    #resultat = trouverParenthesageOptimalNaif(frontieres, dimensions,1, len(dimensions)-1)
+    frontieresNaif = matlib.zeros((n+1, n+1), dtype=int)
+    debutNaif = time()
+    resultatNaif = trouverParenthesageOptimalNaif(dimensions, frontieresNaif, 1, n)
+    tempsTotalNaif = time() - debutNaif
 
-    #print "resultat = " + str(resultat)
-    #print frontieres
-    #afficherParenthesageOptimal(frontieres)
 
-#    #algo #2, avec stockage de mémoire
-    #frontieres = matlib.zeros((len(dimensions), len(dimensions)), dtype=int)
-    #resultat = trouverParenthesageOptimalAvecStockage(frontieres, dimensions)
+    frontieresStockage = matlib.zeros((n+1, n+1), dtype=int)
+    frontieresStockage.fill(-1)
+    debutStockage = time()
+    resultatStockage = trouverParenthesageOptimalAvecStockage(dimensions, frontieresNaif, 1, n)
+    tempsTotalStockage = time() - debutStockage
 
-    #print "resultat = " + str(resultat)
-    #print frontieres
-    #afficherParenthesageOptimal(frontieres)
 
-    #algo #3, programmation dynamique
-    frontieres = matlib.zeros((len(dimensions), len(dimensions)), dtype=int)
-    resultat = trouverParenthesageOptimalDynamique(frontieres, dimensions)
+    frontieresDynamique = matlib.zeros((n+1, n+1), dtype=int)
+    debutDynamique = time()
+    resultatDynamique = trouverParenthesageOptimalDynamique(n, dimensions, frontieresNaif)
+    tempsTotalDynamique = time() - debutDynamique
 
-    print "resultat = " + str(resultat)
-    print frontieres
-    afficherParenthesageOptimal(frontieres)
-
-    #dynamique = AlgoDynamique(dimensions)
-    #resultat = dynamique.trouverParenthesageOptimal()
-
-    #print "resultat = " + str(resultat)
-    #print dynamique.frontieres
-    #print dynamique.m
-    dimensions, matrices = lireFichierMatrice(sys.argv[1])
-    frontieres1 = matlib.zeros((len(dimensions), len(dimensions)), dtype=int)
-    resultat1 = trouverParenthesageOptimalNaif(frontieres1, dimensions, 1, len(dimensions)-1)
-    frontieres2 = matlib.zeros((len(dimensions), len(dimensions)), dtype=int)
-    resultat2 = trouverParenthesageOptimalNaif(frontieres2, dimensions, 1, len(dimensions)-1)
-    frontieres3 = matlib.zeros((len(dimensions), len(dimensions)), dtype=int)
-    resultat3 = trouverParenthesageOptimalNaif(frontieres3, dimensions, 1, len(dimensions)-1)
-
-    print "resultat1 = " + str(resultat1) + " 2 = " + str(resultat2) + " 3 = " + str(resultat3)
-    print frontieres1
-    print frontieres2
-    print frontieres3
-
+    print "Résultats"
+    print "--------------------------"
+    print "Algorithme diviser pour régner naif : " + str(tempsTotalNaif)
+    print "Algorithme diviser pour régner avec stockage : " + str(tempsTotalStockage)
+    print "Algorithme de programmation dynamique : " + str(tempsTotalDynamique)
 
 
 
