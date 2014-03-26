@@ -57,7 +57,7 @@ def trouverParenthesageOptimalNaif(dim, frontiere, i, j):
             if total < minimum:
                 frontiereTemp = k
                 minimum = total
-        frontiere[i, j] = frontiereTemp
+        frontiere[i-1, j-1] = frontiereTemp
     return minimum
 
 ###############################################################################
@@ -71,7 +71,7 @@ def trouverParenthesageOptimalAvecStockage(dim, frontiere, i, j):
        dim: tableau de dimensions des matrices à multiplier
        m: résultats déjà calculés
     """
-    m = matlib.empty((len(dim), len(dim)), dtype=int)
+    m = matlib.empty((j, j), dtype=int)
     m.fill(-1)
     return __trouverParenthesageOptimalAvecStockage(frontiere, dim, m, i, j)
 
@@ -80,15 +80,15 @@ def __trouverParenthesageOptimalAvecStockage(frontiere, dim, m, i, j):
     if i != j:
         minimum = sys.maxint
         for k in range(i, j):
-            if(m[i,k] < 0):
-                m[i, k] = __trouverParenthesageOptimalAvecStockage(frontiere, dim, m, i, k)
-            if(m[k+1,j] < 0):
-                m[k+1,j] = __trouverParenthesageOptimalAvecStockage(frontiere, dim, m, k+1, j)
-            total = m[i,k] + m[k+1,j] + dim[i-1]*dim[k]*dim[j]
+            if(m[i-1,k-1] < 0):
+                m[i-1, k-1] = __trouverParenthesageOptimalAvecStockage(frontiere, dim, m, i, k)
+            if(m[k,j-1] < 0):
+                m[k,j-1] = __trouverParenthesageOptimalAvecStockage(frontiere, dim, m, k+1, j)
+            total = m[i-1,k-1] + m[k,j-1] + dim[i-1]*dim[k]*dim[j]
             if total < minimum:
                 frontiereTemp = k
                 minimum = total
-        frontiere[i, j] = frontiereTemp
+        frontiere[i-1, j-1] = frontiereTemp
     return minimum
 
 ###############################################################################
@@ -100,7 +100,8 @@ def trouverParenthesageOptimalDynamique(n, dim, frontiere):
        multiplication.
 
        Pour obtenir le résultat de toute la chaine de multiplication, il
-       faut regarder à m[1, n]
+       faut regarder à m[1, n]. Je garde donc une matrice plus grande pour
+       que le résultat soit plus obtenu plus naturellement.
     """
     m = matlib.zeros((n+1, n+1), dtype=int)
     for i in range(1, n+1):
@@ -113,7 +114,7 @@ def trouverParenthesageOptimalDynamique(n, dim, frontiere):
                 q = m[i,k] + m[k+1, j] + dim[i-1]*dim[k]*dim[j]
                 if q < m[i,j]:
                     m[i,j] = q
-                    frontiere[i,j] = k
+                    frontiere[i-1,j-1] = k
     return m
 
 
@@ -133,23 +134,10 @@ def __afficherParenthesageOptimal(frontieres, i, j):
         sys.stdout.write("A"+str(i))
     else:
         sys.stdout.write("(")
-        __afficherParenthesageOptimal(frontieres, i, frontieres[i, j])
-        __afficherParenthesageOptimal(frontieres, frontieres[i, j]+1, j)
+        __afficherParenthesageOptimal(frontieres, i, frontieres[i-1, j-1])
+        __afficherParenthesageOptimal(frontieres, frontieres[i-1, j-1]+1, j)
         sys.stdout.write(")")
 
-
-def calculerParentheses(frontieres, info, i, j):
-    #On regarde les parenthèse pour le moment
-    if i != j:
-        k = frontieres[i,j]
-        if i != k:
-            info[i]["avant"] += 1
-            info[k]["apres"] += 1
-            calculerParentheses(frontieres, info, i, k)
-        if k+1 != j:
-            info[k+1]["avant"] += 1
-            info[j]["apres"] += 1
-            calculerParentheses(frontieres, info, k+1,j)
 
 ###############################################################################
 # Multiplication en chaine de matrices de facon optimal selon frontiere
@@ -160,8 +148,8 @@ def multiplierChaineMatrice(frontieres, matrices, i, j):
         à partir des informations de la matrice frontieres
     """
     if i < j:
-        c = multiplierChaineMatrice(frontieres, matrices, i, frontieres[i,j])
-        d = multiplierChaineMatrice(frontieres, matrices, frontieres[i,j]+1, j)
+        c = multiplierChaineMatrice(frontieres, matrices, i, frontieres[i-1,j-1])
+        d = multiplierChaineMatrice(frontieres, matrices, frontieres[i-1,j-1]+1, j)
         return multiplierMatrice(c,d)
     else:
         return matrices[i]
@@ -209,7 +197,7 @@ def main():
     n, dimensions, matrices = lireFichierMatrice("matrices.txt")
 
     with open("resultat.txt", "w") as resultat:
-        frontieres = matlib.zeros((n+1, n+1), dtype=int)
+        frontieres = matlib.zeros((n, n), dtype=int)
         m = trouverParenthesageOptimalDynamique(n, dimensions, frontieres)
         for line in m.tolist():
             resultat.write(reduce(lambda x, y: x+y,

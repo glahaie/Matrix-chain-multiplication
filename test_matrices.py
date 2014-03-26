@@ -36,12 +36,11 @@ class TestAlgoNaif(unittest.TestCase):
 
     def test_resultat_notes(self):
         self.dim = [13, 5, 89, 3, 34]
-        self.frontieres = matlib.zeros((5, 5), dtype=int)
-        result = [[0, 0, 0, 0, 0],
-                  [0, 0, 1, 1, 3],
-                  [0, 0, 0, 2, 3],
-                  [0, 0, 0, 0, 3],
-                  [0, 0, 0, 0, 0]]
+        self.frontieres = matlib.zeros((4, 4), dtype=int)
+        result = [[0, 1, 1, 3],
+                  [0, 0, 2, 3],
+                  [0, 0, 0, 3],
+                  [0, 0, 0, 0]]
         self.frontiereResult = matlib.matrix(result)
         self.assertEqual(2856, trouverParenthesageOptimalNaif(self.dim,
                                                          self.frontieres, 1, 4))
@@ -51,12 +50,11 @@ class TestAlgoStockage(unittest.TestCase):
 
     def test_resultat_notes(self):
         self.dim = [13, 5, 89, 3, 34]
-        self.frontieres = matlib.zeros((5, 5), dtype=int)
-        result = [[0, 0, 0, 0, 0],
-                  [0, 0, 1, 1, 3],
-                  [0, 0, 0, 2, 3],
-                  [0, 0, 0, 0, 3],
-                  [0, 0, 0, 0, 0]]
+        self.frontieres = matlib.zeros((4, 4), dtype=int)
+        result = [[0, 1, 1, 3],
+                  [0, 0, 2, 3],
+                  [0, 0, 0, 3],
+                  [0, 0, 0, 0]]
         self.frontiereResult = matlib.matrix(result)
         self.assertEqual(2856, trouverParenthesageOptimalAvecStockage(self.dim,
                                                          self.frontieres, 1, 4))
@@ -84,11 +82,10 @@ class TestAffichageParenthesage(unittest.TestCase):
         save_stdout = sys.stdout
         out = StringIO()
         sys.stdout = out
-        frontieres = [[0, 0, 0, 0, 0],
-                  [0, 0, 1, 1, 3],
-                  [0, 0, 0, 2, 3],
-                  [0, 0, 0, 0, 3],
-                  [0, 0, 0, 0, 0]]
+        frontieres = [[0, 1, 1, 3],
+                  [0, 0, 2, 3],
+                  [0, 0, 0, 3],
+                  [0, 0, 0, 0]]
         self.frontieres = matlib.matrix(frontieres)
         afficherParenthesageOptimal(self.frontieres, 1, 4)
         output = out.getvalue().strip()
