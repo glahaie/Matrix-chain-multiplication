@@ -73,8 +73,9 @@ class TestAlgoDynamique(unittest.TestCase):
                   [0, 0, 0, 0, 3],
                   [0, 0, 0, 0, 0]]
         self.frontiereResult = matlib.matrix(result)
-        self.assertEqual(2856, trouverParenthesageOptimalDynamique(4, self.dim,
-                                                         self.frontieres))
+        self.m = trouverParenthesageOptimalDynamique(4, self.dim,
+                                                         self.frontieres)
+        self.assertEqual(2856, self.m[1, 4])
         self.assertTrue(numpy.array_equal(self.frontieres, self.frontiereResult))
 
 class TestAffichageParenthesage(unittest.TestCase):

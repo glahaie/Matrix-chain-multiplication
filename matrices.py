@@ -78,7 +78,7 @@ def trouverParenthesageOptimalAvecStockage(dim, frontiere, i, j):
 def __trouverParenthesageOptimalAvecStockage(frontiere, dim, m, i, j):
     minimum = 0
     if i != j:
-        minimum = sys.maxint    #minimum = infini
+        minimum = sys.maxint
         for k in range(i, j):
             if(m[i,k] < 0):
                 m[i, k] = __trouverParenthesageOptimalAvecStockage(frontiere, dim, m, i, k)
@@ -95,7 +95,13 @@ def __trouverParenthesageOptimalAvecStockage(frontiere, dim, m, i, j):
 # Algorithme 3: Programmation dynamique
 ###############################################################################
 def trouverParenthesageOptimalDynamique(n, dim, frontiere):
-    """On remplit la matrice m des résultats partiels"""
+    """Parenthésage optimal selon l'algorithme de programmation dynamique
+       retourne m, la matrice de cout minimal pour toutes les chaines de
+       multiplication.
+
+       Pour obtenir le résultat de toute la chaine de multiplication, il
+       faut regarder à m[1, n]
+    """
     m = matlib.zeros((n+1, n+1), dtype=int)
     for i in range(1, n+1):
         m[i,i] = 0
@@ -108,7 +114,7 @@ def trouverParenthesageOptimalDynamique(n, dim, frontiere):
                 if q < m[i,j]:
                     m[i,j] = q
                     frontiere[i,j] = k
-    return m[1, n]
+    return m
 
 
 ###############################################################################
@@ -193,38 +199,27 @@ def lireFichierMatrice(fichier):
     return noMatrice, dimensions, matrices
 
 def main():
-    if len(sys.argv) != 2:
-        print "Utilisation: matrice.py <nom_fichier>"
-        sys.exit(1)
+    """Comportement si on exécute le programme directement:
+        on lit le fichier matrices.txt pour obtenir l'information
+        sur les matrices, on exécute ensuite la recherche du
+        parenthésage optimal, et on écrit dans resultat.txt les
+        matrices frontieres, m, et ensuite le résultat de la multiplication"""
 
     #On lit le fichier
-    n, dimensions, matrices = lireFichierMatrice(sys.argv[1])
+    n, dimensions, matrices = lireFichierMatrice("matrices.txt")
 
-    print "Temps des algorithmes pour le fichier " + sys.argv[1]
-
-    frontieresNaif = matlib.zeros((n+1, n+1), dtype=int)
-    debutNaif = time()
-    resultatNaif = trouverParenthesageOptimalNaif(dimensions, frontieresNaif, 1, n)
-    tempsTotalNaif = time() - debutNaif
-
-
-    frontieresStockage = matlib.zeros((n+1, n+1), dtype=int)
-    frontieresStockage.fill(-1)
-    debutStockage = time()
-    resultatStockage = trouverParenthesageOptimalAvecStockage(dimensions, frontieresNaif, 1, n)
-    tempsTotalStockage = time() - debutStockage
-
-
-    frontieresDynamique = matlib.zeros((n+1, n+1), dtype=int)
-    debutDynamique = time()
-    resultatDynamique = trouverParenthesageOptimalDynamique(n, dimensions, frontieresNaif)
-    tempsTotalDynamique = time() - debutDynamique
-
-    print "Résultats"
-    print "--------------------------"
-    print "Algorithme diviser pour régner naif : " + str(tempsTotalNaif)
-    print "Algorithme diviser pour régner avec stockage : " + str(tempsTotalStockage)
-    print "Algorithme de programmation dynamique : " + str(tempsTotalDynamique)
+    with open("resultat.txt", "w") as resultat:
+        frontieres = matlib.zeros((n+1, n+1), dtype=int)
+        m = trouverParenthesageOptimalDynamique(n, dimensions, frontieres)
+        for line in m.tolist():
+            resultat.write(reduce(lambda x, y: x+y,
+                                  map(lambda x: str(x)+" ", line)))
+            resultat.write("\n")
+        for line in frontieres.tolist():
+            resultat.write(reduce(lambda x, y: x+y,
+                                  map(lambda x: str(x)+" ", line)))
+            resultat.write("\n")
+        resultat.write(str(m[1,n])+"\n")
 
 
 
