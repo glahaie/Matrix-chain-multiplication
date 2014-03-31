@@ -24,8 +24,8 @@ def genererMatrices(n, nom_fichier):
     with open(nom_fichier, "w") as fichier:
         #Nombre de matrices
         fichier.write(str(n)+"\n")
-        #On génére les dimensions, entre 3 et 100
-        dimensions = random.sample(range(3, 101), n+1)
+        #On génére les dimensions, entre 3 et 300
+        dimensions = random.sample(range(3, 300), n+1)
         fichier.write(reduce(lambda x, y: x + y,
                                  map(lambda x: str(x)+" ", dimensions),
                                  ""

@@ -1,0 +1,181 @@
+%dev_3.tex
+%Par Guillaume Lahaie
+%LAHG04077707
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Simple Sectioned Essay Template
+% LaTeX Template
+%
+% This template has been downloaded from:
+% http://www.latextemplates.com
+%
+% Note:
+% The \lipsum[#] commands throughout this template generate dummy text
+% to fill the template out. These commands should all be removed when 
+% writing essay content.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[10.9pt]{article} % Default font size is 12pt, it can be changed here
+\renewcommand{\familydefault}{\rmdefault}
+\renewcommand{\thesubsection}{\alph{subsection}}
+
+%Pour l'encodage avec accents
+\usepackage[utf8]{inputenc}
+\usepackage{longtable}
+\usepackage{algorithm2e}
+
+%\usepackage{helvet}
+%\renewcommand{\familydefault}{\sfdefault}
+
+%Pour INF4100 - devoir 3
+\usepackage{tikz}
+\usepackage{algorithm2e}
+
+\usepackage{afterpage}
+\usepackage{appendix}
+\usepackage{graphicx} % Required for including pictures
+\usepackage{listings}
+\usepackage{mathtools}
+
+\usepackage[left=2.2cm,top=2.2cm,right=2.2cm,bottom=2.2cm,nohead]{geometry} % Required to change the page size to A4
+\geometry{letterpaper} % Set the page size to be A4 as opposed to the default US Letter
+
+\usepackage{float} % Allows putting an [H] in \begin{figure} to specify the exact location of the figure
+\linespread{1.2} % Line spacing
+
+%\setlength\parindent{0pt} % Uncomment to remove all indentation from paragraphs
+
+\graphicspath{{./Pictures/}} % Specifies the directory where pictures are stored
+\usepackage[french,english]{babel}
+
+%Comportement d'un paragraphe
+\setlength{\parskip}{\baselineskip}%
+\setlength{\parindent}{0pt}%
+
+%Widows/orphans
+\widowpenalty10000
+\clubpenalty10000
+
+\usepackage[hidelinks]{hyperref}
+
+%Meta-info
+\title{INF4100 - devoir 3}
+\author{Guillaume Lahaie}
+\date{Remise: 1er avril 2014}
+
+\hypersetup{
+  pdftitle={INF4100 - devoir 3},
+  pdfauthor={Guillaume Lahaie}
+}
+
+\newcommand\blankpage{%
+  \null
+  \thispagestyle{empty}%
+  \addtocounter{page}{-1}%
+  \newpage}
+
+\begin{document}
+\selectlanguage{french}
+\fussy
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+
+\textsc{\LARGE Université du Québec à Montréal}\\[1.5cm] % Name of your university/college
+\textsc{\Large INF4100}\\[0.5cm] % Major heading such as course name
+
+\HRule \\[1.5cm]
+{ \huge \bfseries Devoir 3}\\[0.4cm] % Title of your document
+\HRule \\[1.5cm]
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Par:}\\
+Guillaume Lahaie \\ LAHG04077707 % Your name
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Remis à:} \\
+Louise Laforest % Supervisor's Name
+\end{flushright}
+\end{minipage}\\[4cm]
+
+{\large \emph{Date de remise:} \\ Le 1$^{er}$ avril 2014}\\[3cm] % Date, change the \today to a set date if you want to be precise
+
+%\includegraphics{Logo}\\[1cm] % Include a department/university logo - this will require the graphicx package
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+\blankpage
+
+%----------------------------------------------------------------------------------------
+%	TABLE OF CONTENTS
+%----------------------------------------------------------------------------------------
+
+\tableofcontents % Include a table of contents
+
+\newpage % Begins the essay on a new page instead of on the same page as the table of contents 
+
+%----------------------------------------------------------------------------------------
+% SECTIONS DU DOCUMENT
+%----------------------------------------------------------------------------------------
+
+
+\section{Numéro 1.}
+
+\subsection{Comparez les temps d'exécution des trois algorithmes}
+
+Voici les temps d'exécution présentés sous forme graphique. Le premier
+graphique présente les résultats pour des fichiers de chaines de 5 à 20 
+chaines de matrices, et le second des chaines de 21 à 100 matrices.
+
+Le premier graphique démontre que pour le temps d'exécution s'accroit
+de façon exponentiel, et donc après 20 matrices, le temps d'exécution
+devient trop long pour représenter sur le graphique.
+
+On peut voir ensuite que le temps d'exécution pour l'algorithme diviser
+pour régner avec stockage et l'algorithme en programmation dynamique
+croit à un rythme similaire, mais l'algorithme de programmation
+dynamique, en évitant les appels récursifs, est plus efficace.
+
+
+\subsection{Algorithme qui affiche l'expression de parenthésage}
+
+Voici un algorithme, ayant comme source le livre ...
+
+\begin{algorithm}
+ \SetKwInput{Donnees}{donnees}
+ \SetKwInput{Antecedents}{antécédents}
+ \SetKwInput{Consequents}{conséquents}
+ \Donnees{ \emph{frontiere}: matrice n*n indicé de 1 à $n$ \\ 
+	   \emph{i}: un indice entre 1 et $n$ \\
+	   \emph{j}: un indice entre 1 et $n$}
+ \Consequents{Le parenthésage optimal est affiché à l'écran}
+ \Deb{
+    \Si{$ i == j$}{
+	imprimer("A"+$i$)
+	}
+      \Sinon{
+	imprimer("(")\\
+        imprimerParenthesage($frontiere$, $i$, $frontiere[i][j]$)\\
+        imprimerParenthesage($frontiere$, $frontiere[i][j]+1$, $j$)\\
+        imprimer(")")\\
+        }
+    }       
+\end{algorithm}
+\end{document}

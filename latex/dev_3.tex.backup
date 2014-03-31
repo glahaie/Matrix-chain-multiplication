@@ -1,0 +1,656 @@
+%dev_3.tex
+%Par Guillaume Lahaie
+%LAHG04077707
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Simple Sectioned Essay Template
+% LaTeX Template
+%
+% This template has been downloaded from:
+% http://www.latextemplates.com
+%
+% Note:
+% The \lipsum[#] commands throughout this template generate dummy text
+% to fill the template out. These commands should all be removed when 
+% writing essay content.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[10.9pt]{article} % Default font size is 12pt, it can be changed here
+\renewcommand{\familydefault}{\rmdefault}
+\renewcommand{\thesubsection}{\alph{subsection}}
+
+%Pour l'encodage avec accents
+\usepackage[utf8]{inputenc}
+\usepackage{longtable}
+\usepackage{algorithm2e}
+
+%\usepackage{helvet}
+%\renewcommand{\familydefault}{\sfdefault}
+
+%Pour INF4100 - devoir 3
+\usepackage{tikz}
+\usepackage{algorithm2e}
+
+\usepackage{afterpage}
+\usepackage{appendix}
+\usepackage{graphicx} % Required for including pictures
+\usepackage{listings}
+\usepackage{mathtools}
+
+\usepackage[left=2.2cm,top=2.2cm,right=2.2cm,bottom=2.2cm,nohead]{geometry} % Required to change the page size to A4
+\geometry{letterpaper} % Set the page size to be A4 as opposed to the default US Letter
+
+\usepackage{float} % Allows putting an [H] in \begin{figure} to specify the exact location of the figure
+\linespread{1.2} % Line spacing
+
+%\setlength\parindent{0pt} % Uncomment to remove all indentation from paragraphs
+
+\graphicspath{{./Pictures/}} % Specifies the directory where pictures are stored
+\usepackage[french,english]{babel}
+
+%Comportement d'un paragraphe
+\setlength{\parskip}{\baselineskip}%
+\setlength{\parindent}{0pt}%
+
+%Widows/orphans
+\widowpenalty10000
+\clubpenalty10000
+
+\usepackage[hidelinks]{hyperref}
+
+%Meta-info
+\title{INF4100 - devoir 3}
+\author{Guillaume Lahaie}
+\date{Remise: 1er avril 2014}
+
+\hypersetup{
+  pdftitle={INF4100 - devoir 3},
+  pdfauthor={Guillaume Lahaie}
+}
+
+\newcommand\blankpage{%
+  \null
+  \thispagestyle{empty}%
+  \addtocounter{page}{-1}%
+  \newpage}
+
+\begin{document}
+\selectlanguage{french}
+\fussy
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+
+\textsc{\LARGE Université du Québec à Montréal}\\[1.5cm] % Name of your university/college
+\textsc{\Large INF4100}\\[0.5cm] % Major heading such as course name
+
+\HRule \\[1.5cm]
+{ \huge \bfseries Devoir 3}\\[0.4cm] % Title of your document
+\HRule \\[1.5cm]
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Par:}\\
+Guillaume Lahaie \\ LAHG04077707 % Your name
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Remis à:} \\
+Louise Laforest % Supervisor's Name
+\end{flushright}
+\end{minipage}\\[4cm]
+
+{\large \emph{Date de remise:} \\ Le 1$^{er}$ avril 2014}\\[3cm] % Date, change the \today to a set date if you want to be precise
+
+%\includegraphics{Logo}\\[1cm] % Include a department/university logo - this will require the graphicx package
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+\blankpage
+
+%----------------------------------------------------------------------------------------
+%	TABLE OF CONTENTS
+%----------------------------------------------------------------------------------------
+
+\tableofcontents % Include a table of contents
+
+\newpage % Begins the essay on a new page instead of on the same page as the table of contents 
+
+%----------------------------------------------------------------------------------------
+% SECTIONS DU DOCUMENT
+%----------------------------------------------------------------------------------------
+
+
+\section{Numéro 1.}
+
+\subsection{Comparez les temps d'exécution des trois algorithmes}
+
+Voici les temps d'exécution présentés sous forme graphique. Le premier
+graphique présente les résultats pour des fichiers de chaines de 5 à 20 
+chaines de matrices, et le second des chaines de 21 à 100 matrices.
+
+Le premier graphique démontre que pour le temps d'exécution s'accroit
+de façon exponentiel, et donc après 20 matrices, le temps d'exécution
+devient trop long pour représenter sur le graphique.
+
+On peut voir ensuite que le temps d'exécution pour l'algorithme diviser
+pour régner avec stockage et l'algorithme en programmation dynamique
+croit à un rythme similaire, mais l'algorithme de programmation
+dynamique, en évitant les appels récursifs, est plus efficace.
+
+
+\subsection{Algorithme qui affiche l'expression de parenthésage}
+
+Voici un algorithme, ayant comme source le livre ...
+
+\begin{algorithm}
+ \SetKwInput{Donnees}{donnees}
+ \SetKwInput{Antecedents}{antécédents}
+ \SetKwInput{Consequents}{conséquents}
+ \Donnees{ \emph{t}: tableau indicé de 0 à $n-1$ \\ \emph{debut1}: un indice entre 0 et $n-1$ \\
+ \emph{debut2}: un indice entre 0 et $n-1$ \\ \emph{fin}: un indice entre 0 et $n-1$}
+ \Sortie{\emph{t}: tableau de nombres entiers indicés de 0 à $n-1$}
+ \Antecedents{les portions de t et de debut1 à debut2-1 et de debut2 à fin sont croissantes. \\ 
+              $0\le debut1 < debut2\le fin$ }
+ \Consequents{La portion de $debut1$ à $fin$ est croissante}
+ \Deb{
+    $i \longleftarrow debut1$ \\
+    $j \longleftarrow debut2$ \\
+    créer un tableau $temp$ de même dimension que $t$ \\
+    \Pour{$k \longleftarrow debut1$ à $fin$}{
+      \Si{$ i < debut2$ et $(j > fin$ ou $t[i] < t[j])$}{
+	$temp[k] \longleftarrow t[i]$ \\
+	$i \longleftarrow i + 1$
+	}
+      \Sinon{
+        $temp[k] \longleftarrow t[j]$ \\
+        $j \longleftarrow j + 1$
+        }
+    }
+    \Pour{$ k \longleftarrow debut1$ à $fin$}{
+      $t[k] \longleftarrow temp[k]$
+      }
+}          
+\end{algorithm}
+
+Cette affirmation est vraie.
+
+On peut prouver que $\log_5(n!) = \Omega(\log_5(n+2))$ en prouvant que $\log_5(n+2)= O(\log_5(n!))$.
+
+Regardons tout d'abord la croissance asymptotique de $\log_5n!$.
+
+Selon Wikipedia\footnote{\url{http://en.wikipedia.org/wiki/Factorial\#Rate_of_growth_and_approximations_for_large_n}},
+$\log_5n! = \Theta(n\log_{}n)$, car $\log_5n! = \sum_{i=0}^n\log_5i$. Cette expression est est bornée par 
+$\int_{x=1}^n\log_{}xdx$ et $\int_{x=0}^n\log_{}(x+1)dx$. Donc,
+\begin{equation}
+ \int_{x=1}^n\log_5xdx \le  \sum_{i=0}^n\log_5i \le \int_{x=0}^n\log_5(x+1)dx
+\end{equation}
+\begin{equation}
+ n\log_5\frac{n}{e} + 1 \le  \log_5n! \le (n+1)\log_5\frac{n+1}{e} + 1
+\end{equation}
+
+Nous pouvons donc dire que $n\log_{}n = O(\log_5n!)$. On pourrait aussi utiliser l'approximation de Stirling pour
+arriver au même résultat.
+
+Nous pouvons aussi voir que $\log_5(n+2) = O(\log_{}n)$. En effet, on cherche un $n_0$ et un $c$ tel que
+$\log_5(n+2) \le c\log_{}n$ pour $n \ge n_0$.
+
+Or, $c\log_{}n = \log_{}n^c$. On cherche donc un $c$ tel que $\log_5(n+2) \le \log_{}n^c$, ou $n+2 \le n^c$, ce
+qui est vrai pour $c=3$ et $n_0=2$. Donc $\log_5(n+2) = O(log_{}n)$.
+
+Par transitivité, nous pouvons donc conclure que comme
+
+$\log_5(n+2) = O(\log_{}n), O(\log_{}n) = O(n\log_{}n)$ et $O(n\log_{}n) = O(\log_5(n!))$, et donc
+
+$\log_5(n+2) = O(\log_5n!)$, ou $\log_5(n!) = \Omega(\log_5(n+2))$.
+
+\subsection{$\log_5n+3\log_7(n^2) = \Omega(\log_3n)$}
+
+Cette affirmation est vraie. On peut encore le prouver ici en prouvant que $\log_3n = O(\log_5n+3\log_7(n^2))$
+
+Tout d'abord, transformons les logarithmes pour tous les avoir sous la base 3:
+
+$\log_5n = ${\Large $\frac{\log_3n}{\log_35}$}, et $3\log_7(n^2) = 3${\Large $\frac{\log_3(n^2)}{\log_37}$}
+$=${\Large $\frac{6}{\log_37}$}$\log_3n$.
+
+Donc, $\log_5n + 3\log_7(n^2) =${\Large $\frac{\log_3n}{\log_35}$}$+${\Large $\frac{6}{\log_37}$}$\log_3n$
+$=\log_3n${\Large $(\frac{1}{\log_35} + \frac{6}{\log_37})$}.
+
+Nous recherchons donc un $c$ et $n_0$ tels que $\log_3n \le c(\frac{1}{\log_35} + \frac{6}{log_37})\log_3n$
+
+Comme $(\frac{1}{\log_35} + \frac{6}{log_37}) < 1$, $\log_3n \le c(\frac{1}{\log_35} + 
+\frac{6}{log_37})\log_3n$, pour tout $c\ge1$, on peut donc conclure qu'avec $c=2$ et $n_0=2$, nous avons
+$\log_3n \le c(\frac{1}{\log_35} + \frac{6}{log_37})\log_3n, \forall n \ge n_0$ 
+
+Donc, $\log_3n = O(\log_5 + 3\log_7(n^2))$ et par conséquent, $\log_5n + 3\log_7(n^2) = 
+\Omega(\log_3n)$.
+
+\subsection{$\sqrt{n} = o(\log_2n)$}
+
+Cette affirmation est fausse. La façon la plus facile de le prouver est en utilisant les limites.
+
+Pour que $\sqrt{n} = o(\log_2n)$, on doit avoir $\lim\limits_{n\rightarrow\infty}${\Large $\frac{\sqrt{n}}{\log_2n}$}$=0$\footnote{\url{http://en.wikipedia.org/wiki/Big_O_notation\#Little-o_notation}}. 
+
+$\lim\limits_{n\rightarrow\infty}${\Large $\frac{\sqrt{n}}{\log_2n} = \frac{\infty}{\infty}$}
+
+Par la règle de l'Hopital,
+
+$\lim\limits_{n\rightarrow\infty}${\Large $\frac{\sqrt{n}}{\log_2n}$}
+$=\lim\limits_{n\rightarrow\infty}${\Large $\frac{\frac{1}{2\sqrt{n}}}{\frac{1}{n\ln(2)}}$}
+$=\lim\limits_{n\rightarrow\infty}${\Large $\frac{n\ln(2)}{2\sqrt{n}}$}
+$=\lim\limits_{n\rightarrow\infty}${\Large $\frac{\ln(2)\sqrt{n}}{2}$}
+$=${\Large $\frac{\ln(2)}{2}$}$\lim\limits_{n\rightarrow\infty}\sqrt{n}$
+$=\infty$.
+
+Donc, comme la limite n'est pas 0, l'affirmation est fausse.
+
+
+
+
+%-------------------------------------------------------------------------------
+\section{Numero 2.}
+
+{\bf $T(n) =2T(\frac{n}{4}) +3n+1$, $T(1)=2$}
+
+\subsection{Dessinez l'arborescence pour $n=256$}
+\begin{center}
+\begin{tikzpicture}
+\Tree [.$3(256)+1$ [.$3(64)+1$ [.$3(16)+1$ [.$3(4)+1$ [.2 ] [.2 ] ]
+					   [.$3(4)+1$ [.2 ] [.2 ] ] ]
+			       [.$3(16)+1$ [.$3(4)+1$ [.2 ] [.2 ] ]  
+					   [.$3(4)+1$ [.2 ] [.2 ] ] ] ]
+		   [.$3(64)+1$ [.$3(16)+1$ [.$3(4)+1$ [.2 ] [.2 ] ]
+					   [.$3(4)+1$ [.2 ] [.2 ] ] ]
+			       [.$3(16)+1$ [.$3(4)+1$ [.2 ] [.2 ] ]  
+					   [.$3(4)+1$ [.2 ] [.2 ] ] ] ] ]
+\end{tikzpicture}
+\end{center}
+
+\subsection{Donnez le travail total effectué à chaque niveau de l'arbre, et le travail total pour
+$n=256$}
+\begin{center}
+\begin{tabular}{|c|c|}
+ \hline
+ {\bf Niveau} & {\bf Total} \\
+ \hline
+ 0 & 769 \\
+ \hline
+ 1 & 386 \\
+ \hline
+ 2 & 196 \\
+ \hline
+ 3 & 104 \\
+ \hline
+ 4 & 32 \\
+ \hline
+ {\bf Total} & {\bf 1487} \\
+ \hline
+\end{tabular}
+\end{center}
+
+
+\subsection{Pour $n=4^p, p \ge 0$, donnez le travail effectué au niveau 0, 1, 2 et $i$ telle que
+$0 \le i \le p$}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+ \hline
+ {\bf Niveau} & {\bf Fonction} & Total \\
+ \hline
+ 0 & $2^0*(3(4^p) + 1)$ & $3(4^p) + 1$ \\
+ \hline
+ 1 & $2^1*(3(4^{p-1}) + 1)$ & $6(4^{p-1}) + 2$ \\
+ \hline
+ 2 & $2^2*(3(4^{p-2}) +1)$ & $12(4^{p-2}) + 4$\\
+ \hline
+ i & $2^i*(3(4^{p-i}) +1)$ & $2^i*3(4^{p-i}) +2^i$ \\
+ \hline
+\end{tabular}
+\end{center}
+
+\subsection{Évaluez le travail que fait machin en fonction de $n$}
+
+D'après c), on peut représenter le travail des niveaux de l'arbre, sauf les feuilles, avec cette somme:
+\begin{equation}
+ \sum_{i=0}^{p-1}2^i(3\frac{n}{4^i} + 1)
+\end{equation}
+
+Comme on a définit $n=4^p$, alors $p = \log_4n$. On peut donc simplifier la somme de cette façon
+
+\begin{equation}
+ \sum_{i=0}^{p-1}2^i(3\frac{n}{4^i} + 1) = 3n\sum_{i=0}^{p-1}\frac{2^i}{4^i} + \sum_{i=0}^{p-1}2^i
+ = 3n\sum_{i=0}^{p-1}\frac{1}{2^i} + \frac{1-2^p}{1-2} = 3n\frac{1-\frac{1}{2^p}}{1-\frac{1}{2}} + (2^p-1)
+\end{equation}
+\begin{equation}
+\sum_{i=0}^{p-1}2^i(3\frac{n}{4^i} + 1) = 3n(2-2^{1-log_4(n)}) + 2^{\log_4(n)} -1
+\end{equation}
+
+Pour le niveau des feuilles, on peut établir le travail à $2^{\log_4n}*2=2^{\log_4n+1}$
+
+Le travail total est donc {\bf $W(n)=3n(2-2^{1-log_4(n)}) + 2^{\log_4(n)} -1 + 2^{\log_4n+1}$}
+
+\subsection{Donnez la complexité asymptotique de $T(n)$ avec la notion $\theta$ sans utiliser le théorème général.}
+
+Nous avons comme équation de récurrence $T(n) = 3T(\frac{n}{4}) + 3n + 1$.
+
+Résolvons à l'aide de la méthode itérative. Regardons tout d'abord comment l'équation se comporte:
+\begin{equation}
+T(n) = 2T(\frac{n}{4}) + 3n + 1 = 2(2T(\frac{n}{4^2}) + 3\frac{n}{4} + 1) + 3n + 1 = 2^2T(\frac{n}{4^2})
++ (\frac{2*3}{4} + 3)n + (1 + 2)
+\end{equation}
+\begin{equation}
+ T(n) = 2^2(2T(\frac{n}{4^3}) + 3\frac{n}{4^2} + 1) + (\frac{2*3}{4} + 3)n + (1 + 2) = 2^3T(\frac{n}{4^3}) +
+ (\frac{2^2*3}{4^2} + \frac{2*3}{4} + 3)n + (1 + 2 + 2^2)
+\end{equation}
+
+On peut donc déduire que l'équation a la forme:
+\begin{equation}
+ T(n) = 2^iT(\frac{n}{4^i}) + \sum_{p=0}^{i-1}\frac{3n}{2^p} + \sum_{p=0}^{i-1}2^p 
+ = 2^iT(\frac{n}{4^i}) + 6-3*2^{1-i} + 2^i - 1
+\end{equation}
+
+On cherche donc une valeur de $n$ telle que $\frac{n}{4^i} = 1$. Supposons donc que $n$ est une puissance de 4,
+c'est-à-dire que $n = 4^i, i \ge i$, nous avons donc en corollaire $i = \log_4n$.
+
+L'équation devient donc:
+\begin{equation}
+ T(n) = 2^{\log_4n}T(\frac{4^i}{4^i}) + (6-3*2^{1-\log_4{n}})n + 2^{\log_4n} - 1 = 2^{\log_4n}*2 + 6-3*2^{1-\log_4{n}} + 2^{\log_4n} - 1
+\end{equation}
+\begin{equation}
+ T(n) = n^{\log_42}*2 + 6-3*2^{1-\log_4{n}} + n^{\log_42} - 1 = 2\sqrt{n} + (6-3*2^{1-\log_4{n}})n + \sqrt{n} -1
+\end{equation}
+\begin{equation}
+ T(n) = 3\sqrt{n} + (6-3*2^{1-\log_4{n}})n -1
+\end{equation}
+
+On peut remarquer ici que $(6-3*2^{1-\log_4n} \le 6$, pour $n \ge 1$. On peut donc changer l'équation par:
+\begin{equation}
+ T(n) = 3\sqrt{n} + (6)n -1
+\end{equation}
+
+Et donc on peut conclure ici que $T(n) = \Theta(n)$, car nous avons trouvé une forme close polynomiale pour $T(n)$,
+et le plus grand exposant est 1.
+
+Donc, $T(n) = \Theta(n)$.
+
+
+
+
+
+
+
+\section{Numero 3.}
+
+{\bf Donnez la complexité asymptotique en notation $\theta$ ou $O$ de $T(n) = T(n-3)+n, T(1)=T(2)=T(3)=1$}
+
+Ici, on ne peut pas utiliser le théorème général, l'équation n'est pas de la forme nécessaire. 
+On peut facilement remarquer ici que l'équation a une forme très proche de l'équation de 
+récurrence suivante:
+
+$T(n) = T(n-1) + n$.
+
+On peut remarquer que $T(n) = T(n-1) + n = T(n-2) + n-1 + n = n + (n-1) + ... +1 = 
+\frac{1}{2}n(n+1) = O(n^2)$. Cela semble donc être une borne que l'on peut utiliser avec 
+la méthode de substitution.
+
+Tentons donc de prouver par induction que $T(n) = O(n^2)$.
+
+\subsection{Étape 1}
+
+Supposons que $T(m) \le cm^2, \forall m < n$. Nous avons donc $n-3 < n$, nous pouvons donc supposer par
+hypothèse que $T(n-3) \le c(n-3)^2$ est vrai.
+
+\subsection{Étape 2}
+
+Montrons, à partir de l'hypothèse d'induction, que $T(n) \le cn^2$.
+
+$T(n) = T(n-3) + n \le c(n-3)^2 + n = c(n^2 - 6n + 9) + n = cn^2 - (6c - 1- \frac{9c}{n})n \le cn^2$.
+
+La dernière inégalité est vraie si et seulement si $(6c -1 -\frac{9c}{n})n \ge 0$. Pour obtenir cela,
+on doit avoir $n \ge 2$ et $c\ge1$. Dans ce cas, nous avons $(6(1) - 1 \frac{9(1)}{2})2 = (0,5)2 \ge 0$.
+
+\subsection{Étape 3}
+
+Choisissons plus précisément les constantes $c$ et $n_0$.
+
+$T(1) \le c(1)^2 = c$\\
+$T(2) \le c(2)^2 = 4c$\\
+$T(3) \le c(3)^2 = 9c$
+
+Nous avons défini $T(1) = T(2) = T(3) = 1$. Ces cas sont vérifiés si $c \ge 1$.
+
+Regardons un cas où il y a une récursion:
+
+$T(4) \le c(4)^2 = 16c$. Nous avons $T(4) = T(1) + 4 = 5 < 16c$ si nous respectons $c\ge1$.
+
+On peut donc choisir $n_0 = 2$ et $c=1$ comme choix valeurs, ce qui nous permet de conclure que
+
+$T(n) = O(n^2)$.
+
+
+
+
+\section{Numéro 4}
+
+{\bf Avec la méthode de la substitution, montrez que \\$T(n) = 3T(\frac{n}{2}) + \frac{n}{\log_2n}$ est dans
+$\Omega(n)$, où $T(1) = 1$.}
+
+On nous donne la borne à utiliser ici pour la méthode de substitution, donc voici l'hypothèse d'induction:
+
+\subsection{Étape 1}
+
+Supposons que $T(m) \ge cm, \forall m < n$. Nous avons donc $\frac{n}{2} < n$, nous pouvons donc supposer par
+hypothèse que $T(\frac{n}{2}) \ge c\frac{n}{2}$ est vrai, pour une certaine valeur de $c > 0$ et $n \ge n_0$.
+
+\subsection{Étape 2}
+
+En utilisant l'hypothèse d'induction, démontrons que $T(n) \ge cn$.
+
+$T(n) = 3T(\frac{n}{2}) + \frac{n}{\log_2n}$. En utilisant l'hypothèse d'induction, on obtient
+
+$3T(\frac{n}{2}) + \frac{n}{\log_2n} \ge 3(c\frac{n}{2}) + \frac{n}{\log_2n} = \frac{3c}{2}n + \frac{n}{\log_2n}$
+
+$\frac{3c}{2}n + \frac{n}{\log_2n} \ge cn$ si $\frac{n}{\log_2n} \ge 0$. Choisissons une valeur de $n_0$ pour s'assurer
+de ce cas. Nous savons que $\log_2n \ge 0$ si $n \ge 1$. Toutefois pour cette valeur, nous avons $\log_21 = 0$, donc
+une division par $0$. Choissisons donc $n_0 = 2$. 
+
+Pour la valeur de c, nous avons $\frac{3c}{2} \ge c \forall c > 0$. Donc, nous pouvons choisir n'importe quelle valeur
+de $c$ qui respecte cette contrainte.
+
+\subsection{Étape 3}
+
+Choisissons plus formellement les valeurs de $c$ et $n_0$. Nous savons déjà que $n_0 \ge 2$, donc testons $T(2)$ avec
+$c = 1$.
+
+$T(2) = 3T(1) + \frac{2}{\log_22} = 3(1) + 2 = 5 \ge (1)(2) = 2$
+
+Vérifions aussi avec $n=4$:
+
+$T(4) = 3T(2) + \frac{4}{\log_24} = 3(3T(1) + \frac{2}{\log_22}) + 2 = 9 + 3(2) + +2 = 17 \ge (1)(4) = 4$.
+
+Donc, pour $c=1$ et $n_0=2$, $T(n) = \Omega(n)$.
+
+
+
+
+\section{Numero 5}
+
+\subsection{Donnez la complexité temporelle, sous forme la forme d'une équation de récurrence, du meilleur cas.}
+
+Regardons un arbre de récurrence de l'algorithme $p$ dans le meilleur cas. j'indique seulement les valeurs de inf et sup
+pour chaque appel récursif. Supposons que les valeurs initiales de inf et sup sont 0 et n pour simplifier le calcul de 
+milieu, de plus, $n=2^p$.
+\begin{center}
+\begin{tikzpicture}[level/.style={sibling distance=60mm/#1}]
+\node [circle,draw] (z){\scriptsize{$(0,n)$}}
+  child {node [circle,draw] (a) {\scriptsize{$(0,\frac{n}{2})$}}
+    child {node [circle,draw] (b) {\scriptsize{$(0,\frac{n}{2^2})$}}
+      child {node {$\vdots$}
+	child {node [circle, draw] (c) {\scriptsize{$(0,1)$}}
+	  child {node [circle,draw] (d) {\scriptsize{$(0,0)$}}}
+	  child {node [circle,draw] (e) {\scriptsize{$(1,1)$}}}
+      }    
+      child[white] {node [blank] {}}
+    }
+    }
+    child[white] {node [blank] (g) {}
+      child[white] {node [blank] {}}
+      child[white] {node [blank] {}}
+    }
+    }
+  child[white] {node [blank] (j) {}
+    child[white] {node [blank] (k) {}
+      child[white] {node {}}
+      child[white] {node {}}
+    }
+  child {node [blank] (l) {}
+    child[white] {node {}}
+    child[white] {node (y){}
+      child[white] {node [blank] (o) {}}
+      child[white] {node [blank] (p) {}
+      }
+    }
+  }
+};
+%Les lignes de récursion
+\draw[->,red]([xshift=-10mm,yshift=-2mm]z |- z) -> ([yshift=10mm]a |- a);
+\draw[->,red]([xshift=-10mm,yshift=-4mm]a |- a) -> ([yshift=10mm]b |- b);
+\draw[->,red]([xshift=-7mm]b |- b) -> ([yshift=10mm]c |- c);
+\draw[->,red]([xshift=-8mm]c |- c) -> ([yshift=10mm, xshift=-2mm]d |- d);
+\draw[->,red]([xshift=+6mm]c |- c) -> ([yshift=10mm]e |- e);
+
+%Les lignes de retour
+\draw[->,blue]([yshift=10mm, xshift=2mm]e |- e) -> ([xshift=8mm]c |- c);
+\draw[->,blue]([yshift=10mm]d |- d) -> ([xshift=-6mm]c |- c);
+\draw[->,green]([xshift=7mm,yshift=5mm]c |- c) -> ([yshift=-10mm]z |- z);
+\end{tikzpicture}
+\end{center}
+
+Le meilleur cas se produit donc lorsque la somme des éléments $t[sup]$ et $t[sup] + 1$ du tableau $t$ est $x$.
+Dans ce cas, on divise le problème en deux à chaque appel récursif, jusqu'au cas de base. Ensuite,
+après avoir vérifié les 2 cas de bases, on vérifie les sommes des éléments $t[inf:milieu]$ et $t[milieu+1:sup]$.
+Dès qu'on obtient une somme égale à $x$, on retourne le résultat. 
+
+Donc, à chaque niveau de la récursion, un nombre constant d'étapes est effectué. En effet,
+à un seul moment, un des niveaux de récursions entrera dans les boucles. Pour le meilleur cas, on fera seulement une
+exécution de chaque boucle. C'est donc un nombre constant d'instructions. Pour les autres niveaux de récursion,
+autre que celui où on exécute la boucle, on vérifiera si $rep$ est vrai, pour ensuite retourner $rep$. Il s'agit
+donc d'un nombre constant d'instructions.
+
+On peut donc représenter l'équation de récurrence comme ceci, pour le meilleur cas: 
+$T(n) = T(\frac{n}{2}) + c, c \in N$. Le cas de base peut être représenter comme $T(1) = c$, car à cette étape, on
+doit faire 3 instructions: assigner faux à $rep$, vérifier si $inf < sup$ et retourner $rep$.
+
+\subsection{Donnez la complexité temporelle, sous forme la forme d'une équation de récurrence, du pire cas.}
+
+Le pire cas se produit lorsque l'algorithme retourne faux, c'est-à-dire qu'il n'a aucune paire d'éléments du
+tableau, indicés $i$ et $j$, telle que $t[i]+t[j] = x$.
+
+Dans ce cas, le cas de base de la récursion est identique au meilleur cas. On effectue les 3 mêmes instructions, donc
+$T(1) = c$.
+
+Pour les niveaux récursifs, le comportement est différent. On a alors 2 appels récursifs, et le
+travail non-récursif. Le travail non-récursif est une série d'instructions constantes (vérifier
+la valeur de $rep$, ou retourner $rep$, par exemple), et deux boucles imbriquées. Cela nous donne
+comme indication que la fonction de non-récurrence serait $O(n^2)$. Voyons si c'est le cas.
+
+Pour un niveau de récursion, définissons $p = sup - inf$. La première boucle effectuera donc $p/2$
+tour de boucle, alors que la boucle interne effectuera elle aussi $n/2$ tours de boucle.
+On aura donc une fonction $f(n) = \Theta(n^2)$, qu'on peut définir plus formellement comme
+$f(n) = c_1n^2 + c_2n + c_3$, où $c_i$ sont des constantes.
+
+L'équation de récursion est donc $f(n) = 2T(\frac{n}{2}) + c_1n^2 + c_2n + c_3$.
+
+\subsection{Résolvez chacune des équations à l'aide du théorème général}
+
+Regardons d'abord l'équation de récurrence dans le meilleur cas: $T(n) = T(\frac{n}{2}) + c$.
+Nous avons donc $a=1, b=2$ et $f(n)=c$. Nous avons ici une application du cas 2, car
+$n^{\log_21} = 1 = \Theta(f(n))$.
+
+Donc, dans le meilleur cas, $T(n) = \Theta(n^{\log_21}\log_{}n) = \Theta(\log_{} n)$.
+
+Dans le pire cas, nous avons $T(n) = 2T(\frac{n}{2}) + c_1n^2 + c_2n + c_3$.
+
+Nous avons ici $a=2, b=2,f(n) = \Theta(n^2)$. Selon le théorème général, nous sommes ici dans
+le cas 3, car $n^{\log_22} = n = \Omega(f(n))$. Donc, $T(n) = \Theta(f(n)) = \Theta(n^2)$.
+
+\subsection{Que fait cet algorithme?}
+
+Ce algorithme tente de vérifier si la somme de deux éléments du tableau $t$ égale $x$, donc une
+valeur recherchée. Il s'agit d'une généralisation du problème de la somme des sous-ensembles, où
+on définit nous-même la somme recherchée, et où nous définissons la cardinalité du sous-ensemble à 2.
+
+\subsection{Trouvez un algorithme plus efficace, donnez sa complexité temporelle dans le meilleur cas
+et dans le pire cas}.
+
+Une possibilité vue en classe est de d'abord trié le tableau, et ensuite de chercher la somme dans
+le tableau trié en itérant sur les éléments selon le résultat de la somme.
+
+La complexité temporelle de cet algorithme dépend de l'algorithme de tri choisi. Dans le meilleur cas,
+l'algorithme aurait une complexité temporelle de $\Theta(n\log_{}n)$, si on utilise quicksort our le tri-fusion.
+
+Pour le pire cas, si on utilise quicksort, l'algorithme serait $\Theta(n^2)$, car c'est le pire cas,
+ou $\Theta(n\log_{}n)$ pour le tri-fusion. Toutefois, on utiliserait plus d'espace-mémoire.
+
+Si on cherche à minimiser le temps d'exécution au dépend de l'espace mémoire requis, on peut obtenir
+un algorithme ayant une complexité temporelle de $\Theta(1)$ dans le meilleur cas et de $\Theta(n)$ dans
+le pire cas. On doit toutefois utiliser une table de hachage.
+
+Voici l'algorithme:
+
+\begin{algorithm}
+ \SetKwInput{Donnees}{donnees}
+ \SetKwInput{Fonction}{fonction}
+ \SetKwInput{Consequents}{conséquents}
+ \Fonction{somme2($t, x$)}
+ \Donnees{ \emph{t}: tableau indicé de 0 à $n-1$
+            \\ \emph{x}: un nombre}
+ \Consequents{Retourne vrai si la somme de deux éléments du tableau est $x$}
+ \Deb{
+    $rep \longleftarrow faux$ \\
+    Créer une table de hachage $temp$ \\
+    $i \longleftarrow 0$ \\
+    \Tq{non rep et $i < n$}{
+      \Si{contient($temp, x-t[i])$}{
+	$rep \longleftarrow vrai$
+	}
+      \Sinon{
+        inserer($temp,t[i]$)
+        }
+    }
+    \Retour{rep}
+}
+\end{algorithm}
+
+On considère ici que la création de la table de hachage, la vérification si la table de hachage
+contient une valeur, et l'insertion d'une valeur dans la table de hachage s'effectue en temps
+constant.
+
+Dans le meilleur cas, on effectue les opérations de la boucle seulement deux fois. Une première fois
+pour insérer le premier nombre, $t[0]$, dans la table de hachage, et la seconde fois on vérifie si
+$x-t[1]$ est dans la table de hachage, et nous avons $t[0] = x - t[1]$. Le meilleur cas est donc
+$\Theta(1)$.
+
+Dans le pire cas, la somme de deux éléments du tableau n'est jamais égale à $x$, donc
+$t[i] + t[j] \neq x, 0 \le i, j \le n-1, i \neq j$. Dans ce cas, on effectue $n$ tours de boucle,
+en insérant à chaque tour $t[i]$ dans la table de hachage. Comme les instructions à l'intérieur
+de la boucle sont toutes en temps constant, et que les tours de boucles dépendent de la longueur
+du tableau en entré, on peut conclure que le pire a comme complexité temporelle $\Theta(n)$.
+
+
+\end{document}

@@ -1,0 +1,5 @@
+\select@language {english}
+\select@language {french}
+\contentsline {section}{\numberline {1}Num\IeC {\'e}ro 1.}{2}{section.1}
+\contentsline {subsection}{\numberline {a}Comparez les temps d'ex\IeC {\'e}cution des trois algorithmes}{2}{subsection.1.1}
+\contentsline {subsection}{\numberline {b}Algorithme qui affiche l'expression de parenth\IeC {\'e}sage}{2}{subsection.1.2}

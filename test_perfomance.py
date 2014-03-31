@@ -21,16 +21,19 @@ def main():
         sys.exit(1)
 
     with open(sys.argv[1], "w") as fichier:
-        for i in range(5, 21):
+        for i in range(5, 101):
             print "Traitement du fichier perf"+str(i)+".txt"
             fichier.write(str(i)+"\t")
             n, dim, matrices = lireFichierMatrice(path_perf+"perf"+str(i)+".txt")
 
-            debut = time()
-            frontieres = matlib.zeros((n+1, n+1), dtype=int)
-            resultat = trouverParenthesageOptimalNaif(dim, frontieres, 1, n)
-            totalTemps = time() - debut
-            fichier.write(str(totalTemps)+"\t")
+	    frontieres = matlib.zeros((n+1, n+1), dtype=int)
+	    if n <= 20:
+	      debut = time()
+	      resultat = trouverParenthesageOptimalNaif(dim, frontieres, 1, n)
+	      totalTemps = time() - debut
+	      fichier.write(str(totalTemps)+"\t")
+	    else:
+	      fichier.write(str(0))
 
             debut = time()
             frontieres.fill(0)
