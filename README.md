@@ -29,4 +29,4 @@ naif n'est plus considéré lorsque n > 20.
   * python test_matrices.py
 
 * Pour tester la performance des algorithmes de x = 5 à n matrices:
-  * python test_performance.py <nombre>
+  * python test_performance.py nombre
