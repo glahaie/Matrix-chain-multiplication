@@ -1,3 +1,10 @@
 \BOOKMARK [1][-]{section.1}{Num\351ro 1.}{}% 1
-\BOOKMARK [2][-]{subsection.1.1}{Comparez les temps d'ex\351cution des trois algorithmes}{section.1}% 2
-\BOOKMARK [2][-]{subsection.1.2}{Algorithme qui affiche l'expression de parenth\351sage}{section.1}% 3
+\BOOKMARK [2][-]{subsection.1.1}{Concevez une fonction qui prend en entr\351e deux matrices et qui retourne le resultat de la multiplicationd des matrices}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{Implantez l'algorithme na\357f}{section.1}% 3
+\BOOKMARK [2][-]{subsection.1.3}{Implantez l'algorithme na\357f avec stockage des calculs d\351j\340 effectu\351s}{section.1}% 4
+\BOOKMARK [2][-]{subsection.1.4}{Implantez l'algorithme de programmation dynamique}{section.1}% 5
+\BOOKMARK [2][-]{subsection.1.5}{Comparez les temps d'ex\351cution des trois algorithmes}{section.1}% 6
+\BOOKMARK [2][-]{subsection.1.6}{Algorithme qui affiche l'expression de parenth\351sage}{section.1}% 7
+\BOOKMARK [2][-]{subsection.1.7}{Algorithme qui multiplie la suite de matrices selon la matrice frontiere}{section.1}% 8
+\BOOKMARK [3][-]{subsubsection.1.7.1}{Algorithme}{subsection.1.7}% 9
+\BOOKMARK [3][-]{subsubsection.1.7.2}{Analyse de la complexit\351 temporelle de l'algorithme}{subsection.1.7}% 10

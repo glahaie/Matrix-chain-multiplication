@@ -64,12 +64,11 @@ class TestAlgoDynamique(unittest.TestCase):
 
     def test_resultat_notes(self):
         self.dim = [13, 5, 89, 3, 34]
-        self.frontieres = matlib.zeros((5, 5), dtype=int)
-        result = [[0, 0, 0, 0, 0],
-                  [0, 0, 1, 1, 3],
-                  [0, 0, 0, 2, 3],
-                  [0, 0, 0, 0, 3],
-                  [0, 0, 0, 0, 0]]
+        self.frontieres = matlib.zeros((4, 4), dtype=int)
+        result = [[0, 1, 1, 3],
+                  [0, 0, 2, 3],
+                  [0, 0, 0, 3],
+                  [0, 0, 0, 0]]
         self.frontiereResult = matlib.matrix(result)
         self.m = trouverParenthesageOptimalDynamique(4, self.dim,
                                                          self.frontieres)

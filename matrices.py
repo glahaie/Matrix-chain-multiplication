@@ -3,7 +3,7 @@
 
 """matrices.py
    Par Guillaume Lahaie
-   dernière modification: 17 mars 2014
+   dernière modification: 1er avril 2014
 
    Implémentation des algorithmes de parenthésage vu en cours.
    Tout d'abord, l'algorithme diviser pour régner, et ensuite
@@ -21,14 +21,15 @@ from time import time
 
 def multiplierMatrice(a, b):
     """Multiplie les matrices a et b, et retourne
-       le résultat dans une nouvelle matrice"""
+       le résultat dans une nouvelle matrice
+    """
 
     #Vérifie si on peut bien multiplier les matrices
     dimA = a.shape
     dimB = b.shape
 
     #On multiplie -- vérifier le type de données
-    c = matlib.empty((dimA[0], dimB[1]))
+    c = matlib.empty((dimA[0], dimB[1]), dtype=a.dtype)
     for i in range(0, dimA[0]):
         for j in range(0, dimB[1]):
             total = 0
@@ -122,14 +123,14 @@ def trouverParenthesageOptimalDynamique(n, dim, frontiere):
 # Affiche le parenthésage optimal des matrices
 ###############################################################################
 def afficherParenthesageOptimal(frontieres, i, j):
-    __afficherParenthesageOptimal(frontieres, i, j)
-    print
-
-def __afficherParenthesageOptimal(frontieres, i, j):
     """Affiche le parenthésage optimal pour un chaine de matrices selon
     les résultats compris dans la matrice frontieres. Source: Introduction
     to Algorithms, 3rd edition
     """
+    __afficherParenthesageOptimal(frontieres, i, j)
+    print
+
+def __afficherParenthesageOptimal(frontieres, i, j):
     if i == j:
         sys.stdout.write("A"+str(i))
     else:
@@ -179,26 +180,28 @@ def lireFichierMatrice(fichier):
                                     )
                                 )
                             )
-                    if len(temp) != dimensions[i+1]:
-                        print "Erreur dans le fichier source"
-                        sys.exit(1)
+                    assert(len(temp) == dimensions[i+1]),"Erreur dans le fichier source"
                     matrice.append(temp)
                 matrices.append(matlib.matrix(matrice))
     return noMatrice, dimensions, matrices
 
 def main():
     """Comportement si on exécute le programme directement:
-        on lit le fichier matrices.txt pour obtenir l'information
-        sur les matrices, on exécute ensuite la recherche du
-        parenthésage optimal, et on écrit dans resultat.txt les
-        matrices frontieres, m, et ensuite le résultat de la multiplication"""
 
-    #On lit le fichier
+        On lit le fichier matrices.txt pour obtenir l'information
+        sur les matrices, on exécute ensuite la recherche du
+        parenthésage optimal avec l'algorithme de programmation dynamique,
+        et on écrit dans resultat.txt les matrices m, frontieres,
+        et ensuite le résultat de la multiplication effectuée à l'aide
+        du parenthésage optimal.
+    """
+
     n, dimensions, matrices = lireFichierMatrice("matrices.txt")
 
     with open("resultat.txt", "w") as resultat:
         frontieres = matlib.zeros((n, n), dtype=int)
         m = trouverParenthesageOptimalDynamique(n, dimensions, frontieres)
+        c = multiplierChaineMatrice(frontieres, matrices, 1, n)
         for line in m.tolist():
             resultat.write(reduce(lambda x, y: x+y,
                                   map(lambda x: str(x)+" ", line)))
@@ -207,7 +210,10 @@ def main():
             resultat.write(reduce(lambda x, y: x+y,
                                   map(lambda x: str(x)+" ", line)))
             resultat.write("\n")
-        resultat.write(str(m[1,n])+"\n")
+        for line in c.tolist():
+            resultat.write(reduce(lambda x, y: x+y,
+                                  map(lambda x: str(x)+" ", line)))
+            resultat.write("\n")
 
 
 

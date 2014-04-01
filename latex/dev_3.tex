@@ -38,7 +38,7 @@
 
 \usepackage{afterpage}
 \usepackage{appendix}
-\usepackage{graphicx} % Required for including pictures
+\usepackage{graphics} % Required for including pictures
 \usepackage{listings}
 \usepackage{mathtools}
 
@@ -138,30 +138,71 @@ Louise Laforest % Supervisor's Name
 
 \section{Numéro 1.}
 
+\subsection{Concevez une fonction qui prend en entrée deux matrices et qui
+            retourne le resultat de la multiplicationd des matrices}
+            
+Voir la fonction \texttt{multiplierMatrice} du fichier \texttt{matrices.py}.
+
+\subsection{Implantez l'algorithme naïf}
+
+Voir la fonction \texttt{trouverParenthesageOptimalNaif} du fichier \texttt{matrices.py}.
+
+\subsection{Implantez l'algorithme naïf avec stockage des calculs déjà effectués}
+
+Voir la fonction \texttt{trouverParenthesageOptimalAvecStockage} du fichier \texttt{matrices.py}.
+
+\subsection{Implantez l'algorithme de programmation dynamique}
+
+Voir la fonction \texttt{trouverParenthesageOptimalDynamique} du fichier \texttt{matrices.py}.
+
 \subsection{Comparez les temps d'exécution des trois algorithmes}
 
-Voici les temps d'exécution présentés sous forme graphique. Le premier
-graphique présente les résultats pour des fichiers de chaines de 5 à 20 
-chaines de matrices, et le second des chaines de 21 à 100 matrices.
+J'ai d'abord fait un premier test pour des chaines de matrices contenant de
+5 à 20 matrices à multiplier.
 
-Le premier graphique démontre que pour le temps d'exécution s'accroit
+Le premier
+graphique présente les resultats pour les trois algorithmes, pour une chaine
+de matrices variant de 5 à 20 matrices. Le second graphique présente les
+résultats pour l'algorithme de programmation dynamique et l'algorithme
+diviser pour régner avec stockage.
+
+Le premier graphique démontre que pour l'algorithme naïf, le temps d'exécution s'accroit
 de façon exponentiel, et donc après 20 matrices, le temps d'exécution
 devient trop long pour représenter sur le graphique.
 
 On peut voir ensuite que le temps d'exécution pour l'algorithme diviser
 pour régner avec stockage et l'algorithme en programmation dynamique
-croit à un rythme similaire, mais l'algorithme de programmation
-dynamique, en évitant les appels récursifs, est plus efficace.
+croit à un rythme similaire.
 
+L'algorithme naif avec stockage est un peu moins efficace, car il est toujours
+récursif. De plus, il faut toujours vérifier si le résultat partiel est
+déjà disponible ou non.
 
-\subsection{Algorithme qui affiche l'expression de parenthésage}
+J'ai ensuite créer un script pour tester la performance des algorithmes (\texttt{test\_performance.py}).
+Ce script prend en entrée un nombre de matrices dans une chaine, et calcule le parenthésage optimal
+avec les trois algorithmes. Si les temps d'exécution dépasse 5 secondes, le calcule est annulé.
 
-Voici un algorithme, ayant comme source le livre ...
+On peut remarquer ici que plus le même résultat que pour le premier test, le temps d'exécution de
+l'algorithme naïf croit exponentiellement, alors que les deux autres algorithmes croissent au 
+même rythme.
+
+\begin{center}
+ \includegraphics[angle=270,scale=0.5]{resultat.eps}
+ \includegraphics[angle=270,scale=0.5]{resultat2.eps}
+\end{center}
+
+\newpage
+\subsection{Algorithme qui affiche l'expression de parenthésage}\label{parenthesage}
+
+Cet algorihtme vient du livre \emph{Introduction to Algorithms, 3rd edition}, de
+Cormen, Leiserson, Rivest, Stein:
 
 \begin{algorithm}
  \SetKwInput{Donnees}{donnees}
  \SetKwInput{Antecedents}{antécédents}
  \SetKwInput{Consequents}{conséquents}
+ \SetKwInput{Fonction}{fonction}
+ \Fonction{imprimerParenthesage($frontiere, i, j$)}
  \Donnees{ \emph{frontiere}: matrice n*n indicé de 1 à $n$ \\ 
 	   \emph{i}: un indice entre 1 et $n$ \\
 	   \emph{j}: un indice entre 1 et $n$}
@@ -178,4 +219,58 @@ Voici un algorithme, ayant comme source le livre ...
         }
     }       
 \end{algorithm}
+
+L'algorithme est implémenté dans la fonction \texttt{afficherParenthesageOptimal} du
+fichier \texttt{matrices.py}.
+
+\subsection{Algorithme qui multiplie la suite de matrices selon la matrice frontiere}
+
+\subsubsection{Algorithme}
+
+Cet algorithme est basé sur l'algorithme de parenthésage en \ref{parenthesage}.
+
+\begin{algorithm}
+ \SetKwInput{Donnees}{donnees}
+ \SetKwInput{Antecedents}{antécédents}
+ \SetKwInput{Consequents}{conséquents}
+ \SetKwInput{Fonction}{fonction}
+ \Fonction{multiplierChaineMatrices($matrices, frontiere, i, j$)}
+ \Donnees{ \emph{matrices}: chaine de matrices à multiplier
+	   \emph{frontiere}: matrice n*n indicé de 1 à $n$ \\ 
+	   \emph{i}: un indice entre 1 et $n$ \\
+	   \emph{j}: un indice entre 1 et $n$}
+ \Sortie{Le résultat de la multiplication de la chaine de matrices}
+ \Deb{
+    \Si{$ i == j$}{
+	retourner $matrices[i]$
+	}
+      \Sinon{
+	$c$ $\longleftarrow$ multiplierChaineMatrices($matrices, frontiere, i, frontiere[i][j]$)\\
+	$d$ $\longleftarrow$ multiplierChaineMatrices($matrices, frontiere, frontiere[i][j]+1, j$)\\
+	\Retour{multiplierMatrice(c, d)}
+        }
+    }       
+\end{algorithm}
+
+Cet algorithme est implémenté par la fonction \texttt{multiplierChaineMatrice} du fichier \texttt{matrices.py}.
+
+\subsubsection{Analyse de la complexité temporelle de l'algorithme}
+
+On connait déjà le nombre de multiplications totales à effectuer pour mutiplier la chaine de matrices. En effet,
+il s'agit du résultat de l'algorithme de parenthésage utilisé.
+
+On peut donc dire de façon précise le nombre de multiplications scalaires totales qui seront effectuées. 
+Toutefois, cela ne donne pas la complexité temporelle de l'algorithme.
+
+Une autre approche serait de considérer que la multiplication de matrices à comme complexité temporelle $O(n^3)$, 
+où $n$ représente la grandeur maximale d'une des deux matrices à multiplier (par exemple, le nombre de ligne de
+la matrice A, le nombre de colonnes de B, ou le nombre de colonnes de A).
+
+Si nous avons $m$ matrices dans la chaine, nous aurons donc $m-1$ multiplications de matrices à effectuer.
+Donc, si chaque multiplication a comme complexité temporelle $O(n^3)$, alors la complexité temporelle
+de la multiplication de la chaine sera:
+
+$T(n) = O((m-1)n^3) = O(mn^3)$, où $m$ est le nombre de matrices à multiplier, et $n$ la dimension maximale
+d'une matrice dans la chaine.
+
 \end{document}
