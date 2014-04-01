@@ -22,12 +22,12 @@ l'écran les temps d'exécution pour les trois algorithmes. L'algorithme
 naif n'est plus considéré lorsque n > 20.
 
 
-*Pour tester le résultat obtenu à partir du fichier matrices.txt:
-** python matrices.py
+* Pour tester le résultat obtenu à partir du fichier matrices.txt:
+* * python matrices.py
 
-*Pour vérifier les tests unitaires:
-** python test_matrices.py
+* Pour vérifier les tests unitaires:
+* * python test_matrices.py
 
-*Pour tester la performance des algorithmes de x = 5 à n
+* Pour tester la performance des algorithmes de x = 5 à n
 matrices:
-** python test_performance.py <nombre>
+* * python test_performance.py <nombre>
