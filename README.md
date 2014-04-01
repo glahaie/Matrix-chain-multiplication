@@ -23,11 +23,10 @@ naif n'est plus considéré lorsque n > 20.
 
 
 * Pour tester le résultat obtenu à partir du fichier matrices.txt:
-* * python matrices.py
+  * python matrices.py
 
 * Pour vérifier les tests unitaires:
-* * python test_matrices.py
+  * python test_matrices.py
 
-* Pour tester la performance des algorithmes de x = 5 à n
-matrices:
-* * python test_performance.py <nombre>
+* Pour tester la performance des algorithmes de x = 5 à n matrices:
+  * python test_performance.py <nombre>
