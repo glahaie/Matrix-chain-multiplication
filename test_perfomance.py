@@ -2,50 +2,57 @@
 # -*- coding:utf8 -*-
 
 """
+    test_performance.py
+    Par: Guillaume Lahaie
+
     Test de performance des différents algorithmes de parenthésage:
-    prend les fichiers test*.txt, de 5 à 20
+    genere une chaine de matrices aleatoire, et ensuite cherche
+    le parenthésage optimal avec chaque algorithme. Si l'algorithme
+    prend plus de 5 secondes, il est arrêté. Cela fonctionne
+    seulement sur un système UNIX.
 """
 
 from matrices import *
 import sys
 from time import time
 from numpy import matlib
-
-path_perf = "tests/"
-
+import random
+from timeout import *
 
 def main():
 
     if len(sys.argv) != 2:
-        print "utilisation: test_performance <nom_fichier>"
+        print "utilisation: test_performance <nombre>"
         sys.exit(1)
 
-    with open(sys.argv[1], "w") as fichier:
-        for i in range(5, 101):
-            print "Traitement du fichier perf"+str(i)+".txt"
-            fichier.write(str(i)+"\t")
-            n, dim, matrices = lireFichierMatrice(path_perf+"perf"+str(i)+".txt")
+    matrices_max = int(sys.argv[1])
+    for i in range(5, matrices_max+1):
+        print "Temps d'exécution des algorithmes pour une chaine de "+ str(i) + " matrices"
 
-	    frontieres = matlib.zeros((n+1, n+1), dtype=int)
-	    if n <= 20:
-	      debut = time()
-	      resultat = trouverParenthesageOptimalNaif(dim, frontieres, 1, n)
-	      totalTemps = time() - debut
-	      fichier.write(str(totalTemps)+"\t")
-	    else:
-	      fichier.write(str(0))
+        dim = random.sample(range(1, 1000), i+1)
 
-            debut = time()
-            frontieres.fill(0)
-            resultat = trouverParenthesageOptimalAvecStockage(dim, frontieres, 1, n)
-            totalTemps = time() - debut
-            fichier.write(str(totalTemps)+"\t")
+        frontieres = matlib.zeros((i, i), dtype=int)
+        with timeout(seconds=5):
+            try:
+                debut = time()
+                resultat = trouverParenthesageOptimalNaif(dim, frontieres, 1, i)
+                totalTemps = time() - debut
+                print "Algorithme naif: \t\t\t" + str(totalTemps)
+            except TimeoutError:
+                print "Algorithme naif: \t\t\tplus de 5 secondes"
 
-            debut = time()
-            frontieres.fill(0)
-            resultat = trouverParenthesageOptimalDynamique(n, dim, frontieres)
-            totalTemps = time() - debut
-            fichier.write(str(totalTemps)+"\n")
+        debut = time()
+        frontieres.fill(0)
+        resultat = trouverParenthesageOptimalAvecStockage(dim, frontieres, 1,i)
+        totalTemps = time() - debut
+        print "Algorithme naif avec stockage: \t\t" + str(totalTemps)
+
+        debut = time()
+        frontieres.fill(0)
+        resultat = trouverParenthesageOptimalDynamique(i, dim, frontieres)
+        totalTemps = time() - debut
+        print "Algorithme de programmation dynamique: \t" + str(totalTemps)
+        print "-----------------------------------------------------------"
 
 
 
